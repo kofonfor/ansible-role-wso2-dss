@@ -1,0 +1,21 @@
+- name: download the DSS
+  get_url: url=https://product-dist.wso2.com/products/data-services-server/3.5.1/wso2dss-3.5.1.zip dest=/root/wso2dss-3.5.1.zip headers="Referer:http://wso2.com/products/data-services-server/"
+
+- name: unpack the DSS
+  unarchive: src=/root/wso2dss-3.5.1.zip remote_src=True dest=/opt
+
+- name: make a link
+  file: state=link src=/opt/wso2dss-3.5.1 dest=/opt/wso2dss
+
+- name: create a user
+  user: name={{ wso2_dss_user }}
+
+- name: set permissions on a components dir
+  file: state=directory recurse=yes dest=/opt/wso2dss/ owner={{ wso2_dss_user }} group={{ wso2_dss_user }}
+
+- name: put systemd unit file to its destination
+  template: src=wso2-dss.service dest=/etc/systemd/system/wso2-dss.service owner=root group=root mode=0644
+  notify: systemctl daemon-reload
+
+- name: enable wso2-dss service
+  service: name=wso2-dss enabled=yes state=started
