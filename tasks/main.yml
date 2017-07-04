@@ -13,6 +13,9 @@
 - name: set permissions on a components dir
   file: state=directory recurse=yes dest=/opt/wso2dss/ owner={{ wso2_dss_user }} group={{ wso2_dss_user }}
 
+- name: put carbon.xml
+  template: src=carbon.xml dest=/opt/wso2dss/repository/conf/carbon.xml backup=yes
+
 - name: put systemd unit file to its destination
   template: src=wso2-dss.service dest=/etc/systemd/system/wso2-dss.service owner=root group=root mode=0644
   notify: systemctl daemon-reload
