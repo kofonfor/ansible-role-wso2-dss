@@ -5,22 +5,21 @@
     </providers>
 
     <datasources>
-
         <datasource>
-            <name>WSO2_CARBON_DB</name>
-            <description>The datasource used for registry and user manager</description>
+            <name>REGISTRY_LOCAL_DSS_{{ subrole|upper }}_{{ wso2_local_db_number }}</name>
+            <description>The datasource used for registry- local</description>
             <jndiConfig>
                 <name>jdbc/WSO2CarbonDB</name>
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5432/wso2dss</url>
-                    <username>wso2dss</username>
-		    <password>{{ wso2dss_postgresql_password }}</password>
+                    <url>jdbc:postgresql://localhost:5432/wso2dss_loc_{{ dbsubrole }}</url>
+                    <username>wso2dss_loc_{{ dbsubrole }}</username>
+                    <password>{{ wso2_locdb_postgresql_password }}{{ dbsubrole }}</password>
                     <driverClassName>org.postgresql.Driver</driverClassName>
                     <maxActive>80</maxActive>
                     <maxWait>60000</maxWait>
-		    <minIdle>5</minIdle>
+                    <minIdle>5</minIdle>
                     <testOnBorrow>true</testOnBorrow>
                     <validationQuery>SELECT 1</validationQuery>
                     <validationInterval>30000</validationInterval>
@@ -28,6 +27,54 @@
                 </configuration>
             </definition>
         </datasource>
+        <datasource>
+            <name>REGISTRY_DB</name>
+            <description>The datasource used for registry- config/governance</description>
+            <jndiConfig>
+                <name>jdbc/WSO2RegistryDB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/wso2dss_regdb</url>
+                    <username>wso2dss_regdb</username>
+                    <password>{{ wso2_registrydb_postgresql_password }}</password>
+                    <driverClassName>org.postgresql.Driver</driverClassName>
+                    <maxActive>80</maxActive>
+                    <maxWait>60000</maxWait>
+                    <minIdle>5</minIdle>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>true</defaultAutoCommit>
+                </configuration>
+            </definition>
+        </datasource>
+         <datasource>
+            <name>WSO2_USER_DB</name>
+            <description>The datasource used for registry and user manager</description>
+            <jndiConfig>
+                <name>jdbc/WSO2UMDB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/wso2esb_udb</url>
+                    <username>wso2esb_udb</username>
+                    <password>{{ wso2esb_userdb_postgresql_password }}</password>
+                    <driverClassName>org.postgresql.Driver</driverClassName>
+                    <maxActive>80</maxActive>
+                    <maxWait>60000</maxWait>
+                    <minIdle>5</minIdle>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>true</defaultAutoCommit>
+                </configuration>
+            </definition>
+        </datasource>
+
+
+
+
 
         <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
         <!--datasource>

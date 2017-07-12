@@ -4,27 +4,30 @@
 - name: unpack the DSS
   unarchive: src=/root/wso2dss-3.5.1.zip remote_src=True dest=/opt
 
-- name: make a link
-  file: state=link src=/opt/wso2dss-3.5.1 dest=/opt/wso2dss
+- name: copy files
+  shell: cp -r /opt/wso2dss-3.5.1 /opt/wso2dss-{{ subrole }} creates=/opt/wso2dss-{{ subrole }}
 
 - name: create a user
   user: name={{ wso2_dss_user }}
 
 - name: set permissions on a components dir
-  file: state=directory recurse=yes dest=/opt/wso2dss/ owner={{ wso2_dss_user }} group={{ wso2_dss_user }}
+  file: state=directory recurse=yes dest=/opt/wso2dss-{{ subrole }}/ owner={{ wso2_dss_user }} group={{ wso2_dss_user }}
 
 - name: put carbon.xml
-  template: src=carbon.xml dest=/opt/wso2dss/repository/conf/carbon.xml backup=yes
+  template: src=carbon.xml dest=/opt/wso2dss-{{ subrole }}/repository/conf/carbon.xml backup=yes
 
 - name: download the PostgreSQL driver
-  get_url: url=https://jdbc.postgresql.org/download/postgresql-42.1.1.jar dest=/opt/wso2dss/repository/components/lib/
+  get_url: url=https://jdbc.postgresql.org/download/postgresql-42.1.1.jar dest=/opt/wso2dss-{{ subrole }}/repository/components/lib/
 
 - name: put master-datasources.xml
-  template: src=master-datasources.xml dest=/opt/wso2dss/repository/conf/datasources/master-datasources.xml backup=yes
+  template: src=master-datasources.xml dest=/opt/wso2dss-{{ subrole }}/repository/conf/datasources/master-datasources.xml backup=yes
+
+- name: put axis2.xml
+  template: src=axis2.xml dest=/opt/wso2dss-{{ subrole }}/repository/conf/axis2/axis2.xml backup=yes
 
 - name: put systemd unit file to its destination
-  template: src=wso2-dss.service dest=/etc/systemd/system/wso2-dss.service owner=root group=root mode=0644
+  template: src=wso2-dss.service dest=/etc/systemd/system/wso2-dss-{{ subrole }}.service owner=root group=root mode=0644
   notify: systemctl daemon-reload
 
-- name: enable wso2-dss service
-  service: name=wso2-dss enabled=yes state=started
+- name: enable wso2-dss-{{ subrole }} service
+  service: name=wso2-dss-{{ subrole }} enabled=yes state=started
