@@ -1,0 +1,3 @@
+{% for worker in groups["app"] %}
+wso2_dss@{{ hostvars[worker]['ansible_default_ipv4']['address'] }}:/opt/wso2dss-worker/repository/deployment/server/
+{% endfor %}

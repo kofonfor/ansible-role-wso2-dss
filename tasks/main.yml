@@ -31,3 +31,6 @@
 
 - name: enable wso2-dss-{{ subrole }} service
   service: name=wso2-dss-{{ subrole }} enabled=yes state=started
+
+- include: depsync.yml
+  when: subrole == "manager"
